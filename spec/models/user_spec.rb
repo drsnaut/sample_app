@@ -8,6 +8,7 @@
 #  created_at      :datetime        not null
 #  updated_at      :datetime        not null
 #  password_digest :string(255)
+#  remember_token  :string(255)
 #
 
 require 'spec_helper'
@@ -26,6 +27,7 @@ describe User do
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
 
   it { should be_valid }
@@ -85,10 +87,11 @@ describe "when password is not present" do
 		it { should_not be_valid }
 	end
 
-	describe "when password confirmation is nil" do
-		before { @user.password_confirmation = nil }
-		it {should_not be_valid}
-	end
+	# No longer necessary.
+	#describe "when password confirmation is nil" do
+	#	before { @user.password_confirmation = nil }
+	#	it { should_not be_valid }
+	#end
 
 	describe "return value of authenticate method" do
 		before { @user.save }
@@ -119,6 +122,11 @@ describe "when password is not present" do
 			@user.save
 			@user.reload.email.should == mixed_case_email.downcase
 		end
+	end
+
+	describe "remember token" do
+		before { @user.save }
+		its(:remember_token) { should_not be_blank }
 	end
 	
 end
